@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: msif
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        query:
+          in_clause_parameter_adding: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/msif_ninos_felices
+    username: <tu_usuario>
+    password: <tu_contraseña>
+    hikari:
+      maximum-pool-size: 3
