@@ -29,4 +29,6 @@ public class Guardian {
     private LocalDateTime registrationDate = LocalDateTime.now();
     @Column(name = "esta_activo")
     private Boolean isActive = true;
+    @Column(name = "tipo_relacion_id")
+    private Integer tipoRelacionId;
 }
