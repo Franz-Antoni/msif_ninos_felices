@@ -14,5 +14,4 @@ public class PatientDto {
     private LocalDate birthDate;
     private String autismLevel;
     private Integer guardianId;
-    private Boolean isActive;
 }

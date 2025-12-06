@@ -10,6 +10,8 @@ import pe.com.msif.dto.PatientDto;
 import pe.com.msif.model.Patient;
 import pe.com.msif.service.PatientService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/patient")
 public class PatientController {
@@ -19,12 +21,24 @@ public class PatientController {
     private AutoMapper autoMapper;
 
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PatientDto> Save(@RequestBody PatientDto patientDto)
+    public ResponseEntity<PatientDto> Create(@RequestBody PatientDto patientDto)
     {
         Patient patient = autoMapper.mapTo(patientDto, Patient.class);
         PatientDto response = autoMapper.mapTo(patientService.Save(patient), PatientDto.class);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PatientDto>> Read()
+    {
+        List<PatientDto> response = autoMapper.mapList(patientService.FindAll(), PatientDto.class);
+
+        if(response.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,7 +53,7 @@ public class PatientController {
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> Delete(@PathVariable Integer id)
     {
-        patientService.Delete(id);
+        patientService.DeleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
