@@ -11,7 +11,7 @@ spring:
           in_clause_parameter_adding: true
   datasource:
     url: jdbc:mysql://localhost:3306/msif_ninos_felices
-    username: <tu_usuario>
-    password: <tu_contraseña>
+    username: root
+    password: mysql
     hikari:
       maximum-pool-size: 3
