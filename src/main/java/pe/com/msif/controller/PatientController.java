@@ -28,8 +28,8 @@ public class PatientController {
     }
 
     @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PatientDto> Update(@PathVariable Integer id, @RequestBody PatientDto patientDto) {
-
+    public ResponseEntity<PatientDto> Update(@PathVariable Integer id, @RequestBody PatientDto patientDto)
+    {
         Patient patient = autoMapper.mapTo(patientDto, Patient.class);
         PatientDto response = autoMapper.mapTo(patientService.Update(id, patient), PatientDto.class);
 
@@ -37,10 +37,9 @@ public class PatientController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> Delete(@PathVariable Integer id) {
-
+    public ResponseEntity<Void> Delete(@PathVariable Integer id)
+    {
         patientService.Delete(id);
-
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
