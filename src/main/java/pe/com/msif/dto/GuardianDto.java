@@ -10,5 +10,4 @@ public class GuardianDto {
     private String telephone;
     private String address;
     private String dni;
-    private Integer tipoRelacionId;
 }

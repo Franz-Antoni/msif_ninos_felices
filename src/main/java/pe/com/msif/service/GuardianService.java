@@ -39,8 +39,12 @@ public class GuardianService {
         }
     }
 
-    public List<Guardian> FindAll() {
-        return guardianRepository.findAll();
+    public List<Guardian> findAllByStatus(Boolean status) {
+        if(status == null) {
+            return guardianRepository.findAll();
+        }
+
+        return guardianRepository.findAllByStatus(status);
     }
 
     public Optional<Guardian> FindById(Integer id) {

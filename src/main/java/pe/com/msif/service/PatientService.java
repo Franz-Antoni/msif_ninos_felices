@@ -42,8 +42,12 @@ public class PatientService {
         }
     }
 
-    public List<Patient> FindAll() {
-        return patientRepository.findAll();
+    public List<Patient> FindAllByStatus(Boolean status) {
+        if(status == null) {
+            return patientRepository.findAll();
+        }
+
+        return patientRepository.findAllByStatus(status);
     }
 
     public Optional<Patient> FindById(Integer id) {

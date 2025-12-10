@@ -30,9 +30,9 @@ public class PatientController {
     }
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PatientDto>> Read()
+    public ResponseEntity<List<PatientDto>> Read(@RequestParam(required = false) Boolean status)
     {
-        List<PatientDto> response = autoMapper.mapList(patientService.FindAll(), PatientDto.class);
+        List<PatientDto> response = autoMapper.mapList(patientService.FindAllByStatus(status), PatientDto.class);
 
         if(response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
