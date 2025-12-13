@@ -18,4 +18,8 @@ public class CitaDto {
     private String estado;
     private LocalDateTime fechaCreacion;
     private Boolean estaActivo;
+
+    // Nombres para que el front los muestre sin hacer llamadas extra
+    private String pacienteNombre;
+    private String profesionalNombre;
 }

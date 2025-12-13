@@ -14,4 +14,3 @@ public interface CitaRepository extends JpaRepository<Cita, Integer> {
     List<Cita> findByEstado(Cita.Estado estado);
     List<Cita> findByFechaProgramadaBetween(LocalDateTime from, LocalDateTime to);
 }
-

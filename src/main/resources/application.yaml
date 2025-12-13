@@ -12,6 +12,6 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/msif_ninos_felices
     username: root
-    password: mysql
+    password: root123
     hikari:
       maximum-pool-size: 3

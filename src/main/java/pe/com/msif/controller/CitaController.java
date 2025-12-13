@@ -12,8 +12,10 @@ import pe.com.msif.dto.CreateCitaDto;
 import pe.com.msif.dto.UpdateCitaDto;
 import pe.com.msif.model.Cita;
 import pe.com.msif.model.Patient;
+import pe.com.msif.model.Professional;
 import pe.com.msif.service.CitaService;
 import pe.com.msif.repository.PatientRepository;
+import pe.com.msif.repository.ProfessionalRepository;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -31,6 +33,9 @@ public class CitaController {
     @Autowired
     private PatientRepository patientRepository;
 
+    @Autowired
+    private ProfessionalRepository professionalRepository;
+
     @PostMapping
     public ResponseEntity<CitaDto> create(@RequestBody CreateCitaDto dto) {
         Cita created = citaService.create(dto);
@@ -39,7 +44,15 @@ public class CitaController {
         // intentar setear pacienteDni si existe el paciente
         if (created.getPacienteId() != null) {
             Optional<Patient> p = patientRepository.findById(created.getPacienteId());
-            p.ifPresent(patient -> response.setPacienteDni(patient.getDni()));
+            p.ifPresent(patient -> {
+                response.setPacienteDni(patient.getDni());
+                response.setPacienteNombre(patient.getName() + " " + patient.getLastName());
+            });
+        }
+        // set profesionalNombre si existe
+        if (created.getProfesionalId() != null) {
+            Optional<Professional> pr = professionalRepository.findById(created.getProfesionalId());
+            pr.ifPresent(prof -> response.setProfesionalNombre(prof.getFirstName() + " " + prof.getLastName()));
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -51,7 +64,14 @@ public class CitaController {
         if (cita.getEstado() != null) dto.setEstado(cita.getEstado().getDbValue());
         if (cita.getPacienteId() != null) {
             Optional<Patient> p = patientRepository.findById(cita.getPacienteId());
-            p.ifPresent(patient -> dto.setPacienteDni(patient.getDni()));
+            p.ifPresent(patient -> {
+                dto.setPacienteDni(patient.getDni());
+                dto.setPacienteNombre(patient.getName() + " " + patient.getLastName());
+            });
+        }
+        if (cita.getProfesionalId() != null) {
+            Optional<Professional> pr = professionalRepository.findById(cita.getProfesionalId());
+            pr.ifPresent(prof -> dto.setProfesionalNombre(prof.getFirstName() + " " + prof.getLastName()));
         }
         return ResponseEntity.ok(dto);
     }
@@ -63,7 +83,14 @@ public class CitaController {
         if (updated.getEstado() != null) response.setEstado(updated.getEstado().getDbValue());
         if (updated.getPacienteId() != null) {
             Optional<Patient> p = patientRepository.findById(updated.getPacienteId());
-            p.ifPresent(patient -> response.setPacienteDni(patient.getDni()));
+            p.ifPresent(patient -> {
+                response.setPacienteDni(patient.getDni());
+                response.setPacienteNombre(patient.getName() + " " + patient.getLastName());
+            });
+        }
+        if (updated.getProfesionalId() != null) {
+            Optional<Professional> pr = professionalRepository.findById(updated.getProfesionalId());
+            pr.ifPresent(prof -> response.setProfesionalNombre(prof.getFirstName() + " " + prof.getLastName()));
         }
         return ResponseEntity.ok(response);
     }
@@ -83,7 +110,14 @@ public class CitaController {
             if (c.getEstado() != null) dto.setEstado(c.getEstado().getDbValue());
             if (c.getPacienteId() != null) {
                 Optional<Patient> p = patientRepository.findById(c.getPacienteId());
-                p.ifPresent(patient -> dto.setPacienteDni(patient.getDni()));
+                p.ifPresent(patient -> {
+                    dto.setPacienteDni(patient.getDni());
+                    dto.setPacienteNombre(patient.getName() + " " + patient.getLastName());
+                });
+            }
+            if (c.getProfesionalId() != null) {
+                Optional<Professional> pr = professionalRepository.findById(c.getProfesionalId());
+                pr.ifPresent(prof -> dto.setProfesionalNombre(prof.getFirstName() + " " + prof.getLastName()));
             }
             return dto;
         });
@@ -103,7 +137,14 @@ public class CitaController {
         if (c.getEstado() != null) dto.setEstado(c.getEstado().getDbValue());
         if (c.getPacienteId() != null) {
             Optional<Patient> p = patientRepository.findById(c.getPacienteId());
-            p.ifPresent(patient -> dto.setPacienteDni(patient.getDni()));
+            p.ifPresent(patient -> {
+                dto.setPacienteDni(patient.getDni());
+                dto.setPacienteNombre(patient.getName() + " " + patient.getLastName());
+            });
+        }
+        if (c.getProfesionalId() != null) {
+            Optional<Professional> pr = professionalRepository.findById(c.getProfesionalId());
+            pr.ifPresent(prof -> dto.setProfesionalNombre(prof.getFirstName() + " " + prof.getLastName()));
         }
         return ResponseEntity.ok(dto);
     }
