@@ -39,7 +39,7 @@ public class GuardianService {
         }
     }
 
-    public List<Guardian> findAllByStatus(Boolean status) {
+    public List<Guardian> FindAllByStatus(Boolean status) {
         if(status == null) {
             return guardianRepository.findAll();
         }
@@ -55,6 +55,14 @@ public class GuardianService {
         }
 
         return guardian;
+    }
+
+    public Optional<Guardian> FindByDni(String dni) {
+        if(dni == null || dni.isEmpty()) {
+            throw new IllegalArgumentException("El dni no puede estar vacio.");
+        }
+
+        return guardianRepository.findByDni(dni);
     }
 
     public void DeleteById(Integer id) {

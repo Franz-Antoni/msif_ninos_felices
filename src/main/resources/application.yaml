@@ -1,6 +1,12 @@
 spring:
   application:
     name: msif
+    security:
+      jwt:
+        secret-key: qrVEBGGghpkc9Ra5L1ELHxm6gisrpgMw,
+        expiration: 1800000,
+        refresh-token:
+          expiration: 604800000
   jpa:
     hibernate:
       ddl-auto: validate

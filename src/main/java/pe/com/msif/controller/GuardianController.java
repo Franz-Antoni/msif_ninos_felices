@@ -32,7 +32,7 @@ public class GuardianController {
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GuardianDto>> Read(@RequestParam(required = false) Boolean status)
     {
-        List<GuardianDto> response = autoMapper.mapList(guardianService.findAllByStatus(status), GuardianDto.class);
+        List<GuardianDto> response = autoMapper.mapList(guardianService.FindAllByStatus(status), GuardianDto.class);
 
         if(response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
