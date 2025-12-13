@@ -13,7 +13,7 @@ import pe.com.msif.service.GuardianService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/guardian")
+@RequestMapping("api/guardian")
 public class GuardianController {
     @Autowired
     private GuardianService guardianService;
