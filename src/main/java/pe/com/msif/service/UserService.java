@@ -23,4 +23,12 @@ public class UserService {
 
         return userRepository.save(entity);
     }
+
+    public Optional<User> FindByEmail(String email) {
+        if(email.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return userRepository.findByEmail(email);
+    }
 }

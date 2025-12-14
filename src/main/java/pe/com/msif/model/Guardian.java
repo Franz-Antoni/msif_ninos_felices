@@ -25,8 +25,6 @@ public class Guardian {
     private String address;
     @Column(name = "dni")
     private String dni;
-    @Column(name = "tipo_relacion_id", nullable = false)
-    private Integer relationshipTypeId;
     @Column(name = "fecha_registro")
     private LocalDateTime registrationDate = LocalDateTime.now();
     @Column(name = "esta_activo")

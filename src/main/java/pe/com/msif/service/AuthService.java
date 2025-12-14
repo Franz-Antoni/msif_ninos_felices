@@ -3,6 +3,7 @@ package pe.com.msif.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pe.com.msif.dto.AuthResponse;
 import pe.com.msif.model.Guardian;
 import pe.com.msif.model.User;
 
@@ -14,6 +15,10 @@ public class AuthService {
     private UserService userService;
     @Autowired
     private GuardianService guardianService;
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private RefreshTokenService refreshTokenService;
 
     @Transactional
     public User Save(User user, Guardian guardian) {
@@ -27,4 +32,43 @@ public class AuthService {
 
         return userService.Save(user);
     }
+
+    @Transactional(readOnly = true)
+    public AuthResponse login(String email, String password) {
+
+        User user = userService.FindByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (!Boolean.TRUE.equals(user.getIsActive())) {
+            throw new RuntimeException("Usuario inactivo");
+        }
+
+        // Temporal: sin BCrypt aún
+        if (!user.getPassword().equals(password)) {
+            throw new RuntimeException("Credenciales incorrectas");
+        }
+
+        String accessToken = jwtService.generateAccessToken(email);
+        String refreshToken = refreshTokenService.create(email);
+
+        return new AuthResponse(accessToken, refreshToken);
+    }
+
+    @Transactional
+    public AuthResponse refresh(String refreshToken) {
+
+        String email = refreshTokenService.validate(refreshToken);
+
+        if (email == null) {
+            throw new RuntimeException("Refresh token inválido");
+        }
+
+        refreshTokenService.revoke(refreshToken);
+
+        String newAccessToken = jwtService.generateAccessToken(email);
+        String newRefreshToken = refreshTokenService.create(email);
+
+        return new AuthResponse(newAccessToken, newRefreshToken);
+    }
+
 }

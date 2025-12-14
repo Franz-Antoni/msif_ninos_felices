@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pe.com.msif.config.AutoMapper;
-import pe.com.msif.dto.AuthDto;
-import pe.com.msif.dto.AuthGuardianDto;
-import pe.com.msif.dto.GuardianDto;
-import pe.com.msif.dto.UserDto;
+import pe.com.msif.dto.*;
 import pe.com.msif.model.Guardian;
 import pe.com.msif.model.User;
 import pe.com.msif.service.AuthService;
@@ -20,8 +17,10 @@ import pe.com.msif.service.AuthService;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+
     @Autowired
     private AuthService authService;
+
     @Autowired
     private AutoMapper autoMapper;
 
@@ -39,5 +38,34 @@ public class AuthController {
         );
 
         return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
+    }
+
+    @PostMapping(
+            path = "/login",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<AuthResponse> login(
+            @RequestBody AuthLoginDto dto) {
+
+        AuthResponse response =
+                authService.login(dto.getEmail(), dto.getPassword());
+
+        return ResponseEntity.ok(response);
+    }
+
+    // ================= REFRESH =================
+    @PostMapping(
+            path = "/refresh",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<AuthResponse> refresh(
+            @RequestBody RefreshTokenDto dto) {
+
+        AuthResponse response =
+                authService.refresh(dto.getRefreshToken());
+
+        return ResponseEntity.ok(response);
     }
 }
