@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pe.com.msif.dto.AuthResponse;
+import pe.com.msif.exception.ConflictException;
 import pe.com.msif.model.Guardian;
 import pe.com.msif.model.User;
 
@@ -22,6 +23,12 @@ public class AuthService {
 
     @Transactional
     public User Save(User user, Guardian guardian) {
+        Optional<User> userExists = userService.FindByEmail(user.getEmail());
+
+        if(userExists.isPresent()) {
+            throw new ConflictException("Este correo ya esta registrado.");
+        }
+
         Optional<Guardian> guardianExists = guardianService.FindByDni(guardian.getDni());
 
         if(guardianExists.isEmpty()) {
