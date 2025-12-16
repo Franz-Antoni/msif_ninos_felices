@@ -15,7 +15,7 @@ import pe.com.msif.model.User;
 import pe.com.msif.service.AuthService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("api/auth")
 public class AuthController {
 
     @Autowired
