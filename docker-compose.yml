@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: mysql:8.0
@@ -7,24 +5,26 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: mysql
       MYSQL_DATABASE: msif_ninos_felices
-      MYSQL_USER: root
-      MYSQL_PASSWORD: mysql
-      TZ: "America/Lima"
-    ports:
-      - "3306:3306"
+      MYSQL_USER: msif_user
+      MYSQL_PASSWORD: msif_pass
+      TZ: America/Lima
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 360s
 
   redis:
     image: redis:7-alpine
     container_name: msif-redis
-    ports:
-      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   app:
     build:
@@ -36,10 +36,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
+      SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/msif_ninos_felices?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: mysql
+      SPRING_DATASOURCE_USERNAME: msif_user
+      SPRING_DATASOURCE_PASSWORD: msif_pass
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
@@ -47,4 +50,3 @@ services:
 
 volumes:
   db_data:
-
