@@ -37,6 +37,9 @@ public class CitaService {
     @Autowired
     private AutoMapper autoMapper;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @Transactional
     public Cita create(CreateCitaDto dto) {
         // LOG: imprimir payload recibido para depuración
@@ -168,5 +171,45 @@ public class CitaService {
         Cita cita = findById(id);
         cita.setEstaActivo(true);
         return citaRepository.save(cita);
+    }
+
+    @Transactional
+    public Cita updateStatus(Integer id, pe.com.msif.dto.StatusUpdateDto dto) {
+        Cita cita = findById(id);
+        if (dto.getEstado() == null) throw new BadRequestException("estado es requerido");
+        String estadoStr = dto.getEstado();
+        // manejar Aprobada/Confirmada y Rechazada
+        if (estadoStr.equalsIgnoreCase("Rechazada") || estadoStr.equalsIgnoreCase("Rechazado")) {
+            // marcar como cancelada/rechazada
+            cita.setEstado(Cita.Estado.CANCELADA);
+            cita.setMotivoRechazo(dto.getMotivoRechazo());
+            Cita saved = citaRepository.save(cita);
+            // notificar
+            notificationService.notifyCitaRejected(saved);
+            return saved;
+        } else {
+            // intento de aprobar/confirmar
+            Integer profesionalId = dto.getProfesionalId();
+            if (profesionalId == null) throw new BadRequestException("profesionalId es requerido para aprobar la cita");
+            // verificar conflictos exactos en la misma fecha/hora
+            List<Cita> conflictos = citaRepository.findByProfesionalIdAndFechaProgramadaAndEstaActivoTrue(profesionalId, dto.getEstado() != null && dto.getEstado().equalsIgnoreCase("Confirmada") && dto.getProfesionalId() != null ? cita.getFechaProgramada() : cita.getFechaProgramada());
+            for (Cita c : conflictos) {
+                if (!c.getId().equals(cita.getId())) throw new ConflictException("Profesional no disponible en ese horario");
+            }
+            cita.setProfesionalId(profesionalId);
+            cita.setEstado(Cita.Estado.CONFIRMADA);
+            Cita saved = citaRepository.save(cita);
+            notificationService.notifyCitaApproved(saved);
+            return saved;
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public pe.com.msif.dto.AvailabilityDto checkAvailability(Integer profesionalId, LocalDateTime fechaProgramada) {
+        pe.com.msif.dto.AvailabilityDto av = new pe.com.msif.dto.AvailabilityDto();
+        List<Cita> conflictos = citaRepository.findByProfesionalIdAndFechaProgramadaAndEstaActivoTrue(profesionalId, fechaProgramada);
+        av.setAvailable(conflictos.isEmpty());
+        av.setConflictingDates(conflictos.stream().map(Cita::getFechaProgramada).toList());
+        return av;
     }
 }

@@ -148,4 +148,13 @@ public class CitaController {
         }
         return ResponseEntity.ok(dto);
     }
+
+    @GetMapping("/disponibilidad")
+    public ResponseEntity<pe.com.msif.dto.AvailabilityDto> checkAvailability(
+            @RequestParam Integer profesionalId,
+            @RequestParam LocalDateTime fechaProgramada
+    ) {
+        pe.com.msif.dto.AvailabilityDto av = citaService.checkAvailability(profesionalId, fechaProgramada);
+        return ResponseEntity.ok(av);
+    }
 }

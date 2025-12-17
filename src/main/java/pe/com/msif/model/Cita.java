@@ -65,6 +65,9 @@ public class Cita {
     @Column(name = "esta_activo", nullable = false)
     private Boolean estaActivo = true;
 
+    @Column(name = "motivo_rechazo")
+    private String motivoRechazo;
+
     // Convertidor como clase estática interna para mapear enum <-> valor DB
     @Converter(autoApply = false)
     public static class EstadoCitaConverter implements AttributeConverter<Estado, String> {
