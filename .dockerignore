@@ -1,0 +1,13 @@
+build/
+.gradle/
+.gradle-cache/
+**/build/
+**/.gradle/
+**/out/
+/.idea/
+*.iml
+*.log
+Dockerfile
+docker-compose.yml
+node_modules/
+

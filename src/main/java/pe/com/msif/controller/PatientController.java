@@ -13,7 +13,7 @@ import pe.com.msif.service.PatientService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/patient")
+@RequestMapping("api/patient")
 public class PatientController {
     @Autowired
     private PatientService patientService;
