@@ -1,15 +1,24 @@
-# Multi-stage Dockerfile for building and running the Spring Boot (Gradle) application
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-EXPOSE 8080
-COPY --from=build /home/gradle/project/build/libs/*.jar app.jar
-# Copy jar from builder
-WORKDIR /app
-FROM eclipse-temurin:17-jre-alpine
-# Run stage
-
-RUN gradle clean bootJar --no-daemon
-COPY --chown=gradle:gradle . /home/gradle/project
-WORKDIR /home/gradle/project
+# ---------- BUILD STAGE ----------
 FROM gradle:8.5-jdk17 AS build
-# Build stage
+WORKDIR /home/gradle/project
 
+COPY --chown=gradle:gradle gradlew .
+COPY --chown=gradle:gradle gradle gradle
+COPY --chown=gradle:gradle build.gradle settings.gradle ./
+
+RUN gradle dependencies --no-daemon
+
+COPY --chown=gradle:gradle src src
+RUN gradle bootJar --no-daemon
+
+# ---------- RUNTIME STAGE ----------
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+
+RUN useradd -r -u 1001 spring
+USER spring
+
+COPY --from=build /home/gradle/project/build/libs/*.jar app.jar
+
+EXPOSE 8080
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75", "-jar", "app.jar"]
