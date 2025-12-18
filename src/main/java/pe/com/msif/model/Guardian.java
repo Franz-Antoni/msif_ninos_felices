@@ -26,7 +26,17 @@ public class Guardian {
     @Column(name = "dni")
     private String dni;
     @Column(name = "fecha_registro")
-    private LocalDateTime registrationDate = LocalDateTime.now();
-    @Column(name = "esta_activo")
-    private Boolean isActive = true;
+    private LocalDateTime registrationDate;
+    @Column(name = "esta_activo", nullable = false)
+    private Boolean isActive;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.isActive == null) {
+            this.isActive = true;
+        }
+        if (this.registrationDate == null) {
+            this.registrationDate = LocalDateTime.now();
+        }
+    }
 }

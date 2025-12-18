@@ -46,9 +46,15 @@ public class Cita {
     @Column(name = "esta_activo", nullable = false)
     private Boolean estaActivo = true;
 
-    @Column(name = "motivo_rechazo")
+    @Transient
     private String motivoRechazo;
 
+    public String getMotivoRechazo() {
+        if (motivoRechazo != null && !motivoRechazo.trim().isEmpty()) {
+            return motivoRechazo;
+        }
+        return this.razon;
+    }
 
     @Override
     public boolean equals(Object o) {
