@@ -35,7 +35,7 @@ public class PatientService {
         return patientRepository.save(entity);
     }
 
-    public Patient Update(Integer id, Patient entity) {
+    public Patient Update(Long id, Patient entity) {
         Optional<Patient> entityExists = patientRepository.findById(id);
 
         if(entityExists.isEmpty() || !entityExists.get().getIsActive()) {
@@ -67,7 +67,7 @@ public class PatientService {
         return patientRepository.findAllByStatus(status);
     }
 
-    public Optional<Patient> FindById(Integer id) {
+    public Optional<Patient> FindById(Long id) {
         Optional<Patient> patient = patientRepository.findById(id);
 
         if(patient.isEmpty()) {
@@ -77,7 +77,7 @@ public class PatientService {
         return patient;
     }
 
-    public void DeleteById(Integer id) {
+    public void DeleteById(Long id) {
         Optional<Patient> entityExists = patientRepository.findById(id);
 
         if(entityExists.isPresent()) {

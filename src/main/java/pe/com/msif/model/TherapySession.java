@@ -14,21 +14,20 @@ public class TherapySession {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
-    @Column(name = "plan_tratamiento_id", nullable = false)
-    private Integer treatmentPlanId;
+    @Column(name = "plan_tratamiento_id")
+    private Long treatmentPlanId;
 
-    @Column(name = "cita_id", nullable = false)
-    private Integer appointmentId;
+    @Column(name = "cita_id")
+    private Long appointmentId;
 
     @Column(name = "fecha_asistencia")
     private LocalDateTime attendanceDate;
 
-    @Column(name = "nota", length = 300)
+    @Column(name = "nota")
     private String note;
 
-    @Column(name = "esta_activo", nullable = false)
+    @Column(name = "esta_activo")
     private Boolean isActive = true;
 }
-

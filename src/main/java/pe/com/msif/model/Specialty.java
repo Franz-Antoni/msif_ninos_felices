@@ -12,7 +12,7 @@ public class Specialty {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "nombre", length = 100, nullable = false)
     private String name;
@@ -23,4 +23,3 @@ public class Specialty {
     @Column(name = "esta_activo", nullable = false)
     private Boolean isActive = true;
 }
-

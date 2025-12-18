@@ -14,17 +14,23 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
+
     @Column(name = "correo")
     private String email;
+
     @Column(name = "clave")
     private String password;
+
     @Column(name = "apoderado_id")
-    private Integer guardianId;
+    private Long guardianId;
+
     @Column(name = "profesional_id")
-    private Integer professionalId;
+    private Long professionalId;
+
     @Column(name = "fecha_creacion")
-    private LocalDateTime registrationDate = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
+
     @Column(name = "esta_activo")
     private Boolean isActive = true;
 }

@@ -18,7 +18,7 @@ public class RecommendationService {
         return repository.save(entity);
     }
 
-    public Recommendation Update(Integer id, Recommendation entity) {
+    public Recommendation Update(Long id, Recommendation entity) {
         Optional<Recommendation> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         entity.setId(id);
@@ -31,13 +31,13 @@ public class RecommendationService {
         return repository.findAllByIsActive(status);
     }
 
-    public Optional<Recommendation> FindById(Integer id) {
+    public Optional<Recommendation> FindById(Long id) {
         Optional<Recommendation> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         return e;
     }
 
-    public void DeleteById(Integer id) {
+    public void DeleteById(Long id) {
         Optional<Recommendation> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         Recommendation entity = e.get();
@@ -45,4 +45,3 @@ public class RecommendationService {
         repository.save(entity);
     }
 }
-

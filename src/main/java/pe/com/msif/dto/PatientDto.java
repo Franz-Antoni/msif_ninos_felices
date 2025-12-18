@@ -6,12 +6,12 @@ import java.time.LocalDate;
 
 @Data
 public class PatientDto {
-    private Integer id;
+    private Long id;
     private String name;
     private String lastName;
     private Boolean gender;
     private String dni;
     private LocalDate birthDate;
     private String autismLevel;
-    private Integer guardianId;
+    private Long guardianId;
 }

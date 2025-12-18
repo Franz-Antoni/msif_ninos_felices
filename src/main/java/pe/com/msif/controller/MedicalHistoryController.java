@@ -35,16 +35,15 @@ public class MedicalHistoryController {
     }
 
     @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MedicalHistoryDto> Update(@PathVariable Integer id, @RequestBody MedicalHistoryDto dto) {
+    public ResponseEntity<MedicalHistoryDto> Update(@PathVariable Long id, @RequestBody MedicalHistoryDto dto) {
         MedicalHistory e = autoMapper.mapTo(dto, MedicalHistory.class);
         MedicalHistoryDto res = autoMapper.mapTo(service.Update(id, e), MedicalHistoryDto.class);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> Delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> Delete(@PathVariable Long id) {
         service.DeleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
-

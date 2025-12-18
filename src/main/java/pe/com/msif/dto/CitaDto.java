@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class CitaDto {
-    private Integer id;
+    private Long id;
     private String razon;
-    private Integer pacienteId;
+    private Long pacienteId;
     // DNI del paciente agregado para que el front pueda mostrarlo si lo necesita
     private String pacienteDni;
-    private Integer profesionalId;
+    private Long profesionalId;
     private LocalDateTime fechaProgramada;
     private String estado;
     private LocalDateTime fechaCreacion;

@@ -18,7 +18,7 @@ public class ActivityService {
         return repository.save(entity);
     }
 
-    public Activity Update(Integer id, Activity entity) {
+    public Activity Update(Long id, Activity entity) {
         Optional<Activity> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         entity.setId(id);
@@ -31,13 +31,17 @@ public class ActivityService {
         return repository.findAllByIsActive(status);
     }
 
-    public Optional<Activity> FindById(Integer id) {
+    public List<Activity> FindAllByTherapySession(Long therapySessionId) {
+        return repository.findAllByTherapySessionIdAndIsActive(therapySessionId, true);
+    }
+
+    public Optional<Activity> FindById(Long id) {
         Optional<Activity> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         return e;
     }
 
-    public void DeleteById(Integer id) {
+    public void DeleteById(Long id) {
         Optional<Activity> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         Activity entity = e.get();
@@ -45,4 +49,3 @@ public class ActivityService {
         repository.save(entity);
     }
 }
-

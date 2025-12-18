@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.msif.config.AutoMapper;
@@ -40,7 +41,9 @@ public class CitaController {
     public ResponseEntity<CitaDto> create(@RequestBody CreateCitaDto dto) {
         Cita created = citaService.create(dto);
         CitaDto response = autoMapper.mapTo(created, CitaDto.class);
-        if (created.getEstado() != null) response.setEstado(created.getEstado().getDbValue());
+        if (created.getEstado() != null) {
+            response.setEstado(created.getEstado().name());
+        }
         // intentar setear pacienteDni si existe el paciente
         if (created.getPacienteId() != null) {
             Optional<Patient> p = patientRepository.findById(created.getPacienteId());
@@ -58,10 +61,10 @@ public class CitaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CitaDto> getById(@PathVariable Integer id) {
+    public ResponseEntity<CitaDto> getById(@PathVariable Long id) {
         Cita cita = citaService.findById(id);
         CitaDto dto = autoMapper.mapTo(cita, CitaDto.class);
-        if (cita.getEstado() != null) dto.setEstado(cita.getEstado().getDbValue());
+        if (cita.getEstado() != null) dto.setEstado(cita.getEstado().name());
         if (cita.getPacienteId() != null) {
             Optional<Patient> p = patientRepository.findById(cita.getPacienteId());
             p.ifPresent(patient -> {
@@ -77,10 +80,10 @@ public class CitaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CitaDto> update(@PathVariable Integer id, @RequestBody UpdateCitaDto dto) {
+    public ResponseEntity<CitaDto> update(@PathVariable Long id, @RequestBody UpdateCitaDto dto) {
         Cita updated = citaService.update(id, dto);
         CitaDto response = autoMapper.mapTo(updated, CitaDto.class);
-        if (updated.getEstado() != null) response.setEstado(updated.getEstado().getDbValue());
+        if (updated.getEstado() != null) response.setEstado(updated.getEstado().name());
         if (updated.getPacienteId() != null) {
             Optional<Patient> p = patientRepository.findById(updated.getPacienteId());
             p.ifPresent(patient -> {
@@ -97,8 +100,8 @@ public class CitaController {
 
     @GetMapping
     public ResponseEntity<Page<CitaDto>> list(
-            @RequestParam Optional<Integer> pacienteId,
-            @RequestParam Optional<Integer> profesionalId,
+            @RequestParam Optional<Long> pacienteId,
+            @RequestParam Optional<Long> profesionalId,
             @RequestParam Optional<String> estado,
             @RequestParam Optional<LocalDateTime> from,
             @RequestParam Optional<LocalDateTime> to,
@@ -107,7 +110,7 @@ public class CitaController {
         Page<Cita> page = citaService.findAll(pacienteId, profesionalId, estado, from, to, pageable);
         Page<CitaDto> dtoPage = page.map(c -> {
             CitaDto dto = autoMapper.mapTo(c, CitaDto.class);
-            if (c.getEstado() != null) dto.setEstado(c.getEstado().getDbValue());
+            if (c.getEstado() != null) dto.setEstado(c.getEstado().name());
             if (c.getPacienteId() != null) {
                 Optional<Patient> p = patientRepository.findById(c.getPacienteId());
                 p.ifPresent(patient -> {
@@ -125,16 +128,16 @@ public class CitaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         citaService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/activar")
-    public ResponseEntity<CitaDto> activar(@PathVariable Integer id) {
+    public ResponseEntity<CitaDto> activar(@PathVariable Long id) {
         Cita c = citaService.activate(id);
         CitaDto dto = autoMapper.mapTo(c, CitaDto.class);
-        if (c.getEstado() != null) dto.setEstado(c.getEstado().getDbValue());
+        if (c.getEstado() != null) dto.setEstado(c.getEstado().name());
         if (c.getPacienteId() != null) {
             Optional<Patient> p = patientRepository.findById(c.getPacienteId());
             p.ifPresent(patient -> {
@@ -151,7 +154,7 @@ public class CitaController {
 
     @GetMapping("/disponibilidad")
     public ResponseEntity<pe.com.msif.dto.AvailabilityDto> checkAvailability(
-            @RequestParam Integer profesionalId,
+            @RequestParam Long profesionalId,
             @RequestParam LocalDateTime fechaProgramada
     ) {
         pe.com.msif.dto.AvailabilityDto av = citaService.checkAvailability(profesionalId, fechaProgramada);

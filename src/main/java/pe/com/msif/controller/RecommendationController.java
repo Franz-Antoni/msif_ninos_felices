@@ -35,16 +35,15 @@ public class RecommendationController {
     }
 
     @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RecommendationDto> Update(@PathVariable Integer id, @RequestBody RecommendationDto dto) {
+    public ResponseEntity<RecommendationDto> Update(@PathVariable Long id, @RequestBody RecommendationDto dto) {
         Recommendation e = autoMapper.mapTo(dto, Recommendation.class);
         RecommendationDto res = autoMapper.mapTo(service.Update(id, e), RecommendationDto.class);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> Delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> Delete(@PathVariable Long id) {
         service.DeleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
-

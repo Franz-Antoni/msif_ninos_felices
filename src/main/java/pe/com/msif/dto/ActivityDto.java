@@ -4,12 +4,11 @@ import lombok.Data;
 
 @Data
 public class ActivityDto {
-    private Integer id;
+    private Long id;
     private String title;
     private String description;
-    private Integer therapySessionId;
+    private Long therapySessionId;
     private String status;
     private String progressNote;
     private Boolean isActive;
 }
-

@@ -18,7 +18,7 @@ public class SpecialtyService {
         return specialtyRepository.save(entity);
     }
 
-    public Specialty Update(Integer id, Specialty entity) {
+    public Specialty Update(Long id, Specialty entity) {
         Optional<Specialty> entityExists = specialtyRepository.findById(id);
 
         if(entityExists.isPresent()) {
@@ -37,7 +37,7 @@ public class SpecialtyService {
         return specialtyRepository.findAllByIsActive(status);
     }
 
-    public Optional<Specialty> FindById(Integer id) {
+    public Optional<Specialty> FindById(Long id) {
         Optional<Specialty> entity = specialtyRepository.findById(id);
 
         if(entity.isEmpty()) {
@@ -47,7 +47,7 @@ public class SpecialtyService {
         return entity;
     }
 
-    public void DeleteById(Integer id) {
+    public void DeleteById(Long id) {
         Optional<Specialty> entityExists = specialtyRepository.findById(id);
 
         if(entityExists.isPresent()) {
@@ -59,4 +59,3 @@ public class SpecialtyService {
         }
     }
 }
-

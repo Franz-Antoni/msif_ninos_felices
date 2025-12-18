@@ -6,11 +6,10 @@ import java.time.LocalDateTime;
 
 @Data
 public class TherapySessionDto {
-    private Integer id;
-    private Integer treatmentPlanId;
-    private Integer appointmentId;
+    private Long id;
+    private Long treatmentPlanId;
+    private Long appointmentId;
     private LocalDateTime attendanceDate;
     private String note;
     private Boolean isActive;
 }
-

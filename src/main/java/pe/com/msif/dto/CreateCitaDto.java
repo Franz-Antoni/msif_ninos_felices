@@ -14,7 +14,7 @@ public class CreateCitaDto {
     private String pacienteDni;
 
     // Campo opcional para compatibilidad: si el front manda pacienteId en lugar de pacienteDni
-    private Integer pacienteId;
+    private Long pacienteId;
 
     // profesionalId no se acepta en la creación: se asigna después al aprobar la cita
 

@@ -18,7 +18,7 @@ public class MedicalHistoryService {
         return repository.save(entity);
     }
 
-    public MedicalHistory Update(Integer id, MedicalHistory entity) {
+    public MedicalHistory Update(Long id, MedicalHistory entity) {
         Optional<MedicalHistory> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         entity.setId(id);
@@ -31,13 +31,13 @@ public class MedicalHistoryService {
         return repository.findAllByIsActive(status);
     }
 
-    public Optional<MedicalHistory> FindById(Integer id) {
+    public Optional<MedicalHistory> FindById(Long id) {
         Optional<MedicalHistory> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         return e;
     }
 
-    public void DeleteById(Integer id) {
+    public void DeleteById(Long id) {
         Optional<MedicalHistory> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         MedicalHistory entity = e.get();
@@ -45,4 +45,3 @@ public class MedicalHistoryService {
         repository.save(entity);
     }
 }
-

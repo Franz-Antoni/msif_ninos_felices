@@ -21,10 +21,10 @@ public class AppointmentController {
     public ResponseEntity<List<AppointmentCalendarDto>> calendar(@RequestParam(required = false) String patient,
                                                                   @RequestParam Integer month,
                                                                   @RequestParam Integer year) {
-        Optional<Integer> patientIdOpt = Optional.empty();
+        Optional<Long> patientIdOpt = Optional.empty();
         if (patient != null && !patient.isBlank() && !"ALL".equalsIgnoreCase(patient)) {
             try {
-                patientIdOpt = Optional.of(Integer.parseInt(patient));
+                patientIdOpt = Optional.of(Long.parseLong(patient));
             } catch (NumberFormatException ex) {
                 // if not numeric, ignore and return all
                 patientIdOpt = Optional.empty();
@@ -36,4 +36,3 @@ public class AppointmentController {
         return ResponseEntity.ok(result);
     }
 }
-

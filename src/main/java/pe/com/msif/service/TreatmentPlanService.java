@@ -18,7 +18,7 @@ public class TreatmentPlanService {
         return repository.save(entity);
     }
 
-    public TreatmentPlan Update(Integer id, TreatmentPlan entity) {
+    public TreatmentPlan Update(Long id, TreatmentPlan entity) {
         Optional<TreatmentPlan> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         entity.setId(id);
@@ -31,18 +31,38 @@ public class TreatmentPlanService {
         return repository.findAllByIsActive(status);
     }
 
-    public Optional<TreatmentPlan> FindById(Integer id) {
+    public List<TreatmentPlan> FindAllByPatientIdAndStatus(Long patientId, Boolean status) {
+        if (status == null) return repository.findAllByPatientId(patientId);
+        return repository.findAllByPatientIdAndIsActive(patientId, status);
+    }
+
+    public Optional<TreatmentPlan> FindById(Long id) {
         Optional<TreatmentPlan> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         return e;
     }
 
-    public void DeleteById(Integer id) {
+    public void DeleteById(Long id) {
         Optional<TreatmentPlan> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         TreatmentPlan entity = e.get();
         entity.setIsActive(false);
         repository.save(entity);
     }
-}
 
+    public TreatmentPlan Close(Long id) {
+        Optional<TreatmentPlan> e = repository.findById(id);
+        if (e.isEmpty()) throw new NotFoundException();
+        TreatmentPlan plan = e.get();
+        plan.setIsActive(false);
+        return repository.save(plan);
+    }
+
+    public TreatmentPlan Reevaluate(Long id) {
+        Optional<TreatmentPlan> e = repository.findById(id);
+        if (e.isEmpty()) throw new NotFoundException();
+        TreatmentPlan plan = e.get();
+        // aquí podrías setear alguna bandera o actualizar evaluación; por ahora la dejamos activa y no cambiamos isActive
+        return repository.save(plan);
+    }
+}

@@ -7,7 +7,9 @@ import pe.com.msif.model.Activity;
 import java.util.List;
 
 @Repository
-public interface ActivityRepository extends JpaRepository<Activity, Integer> {
+public interface ActivityRepository extends JpaRepository<Activity, Long> {
     List<Activity> findAllByIsActive(Boolean isActive);
-}
 
+    // Nuevo: listar por sesion de terapia
+    List<Activity> findAllByTherapySessionIdAndIsActive(Long therapySessionId, Boolean isActive);
+}

@@ -6,6 +6,7 @@ import pe.com.msif.exception.NotFoundException;
 import pe.com.msif.model.TherapySession;
 import pe.com.msif.repository.TherapySessionRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +19,7 @@ public class TherapySessionService {
         return repository.save(entity);
     }
 
-    public TherapySession Update(Integer id, TherapySession entity) {
+    public TherapySession Update(Long id, TherapySession entity) {
         Optional<TherapySession> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         entity.setId(id);
@@ -31,13 +32,20 @@ public class TherapySessionService {
         return repository.findAllByIsActive(status);
     }
 
-    public Optional<TherapySession> FindById(Integer id) {
+    public List<TherapySession> FindByPatient(Long patientId, LocalDateTime from, LocalDateTime to) {
+        if (from != null && to != null) {
+            return repository.findAllByPatientIdAndFechaAsistenciaBetweenAndIsActive(patientId, from, to, true);
+        }
+        return repository.findAllByPatientIdAndIsActive(patientId, true);
+    }
+
+    public Optional<TherapySession> FindById(Long id) {
         Optional<TherapySession> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         return e;
     }
 
-    public void DeleteById(Integer id) {
+    public void DeleteById(Long id) {
         Optional<TherapySession> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         TherapySession entity = e.get();
@@ -45,4 +53,3 @@ public class TherapySessionService {
         repository.save(entity);
     }
 }
-

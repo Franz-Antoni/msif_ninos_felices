@@ -14,24 +14,23 @@ public class MedicalHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
-    @Column(name = "paciente_id", nullable = false)
-    private Integer patientId;
+    @Column(name = "paciente_id")
+    private Long patientId;
 
-    @Column(name = "profesional_id", nullable = false)
-    private Integer professionalId;
+    @Column(name = "profesional_id")
+    private Long professionalId;
 
     @Column(name = "fecha_creacion")
-    private LocalDateTime creationDate = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "descripcion", length = 300)
+    @Column(name = "descripcion")
     private String description;
 
-    @Column(name = "diagnostico", length = 100)
+    @Column(name = "diagnostico")
     private String diagnosis;
 
-    @Column(name = "esta_activo", nullable = false)
+    @Column(name = "esta_activo")
     private Boolean isActive = true;
 }
-

@@ -14,24 +14,23 @@ public class TreatmentPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
-    @Column(name = "paciente_id", nullable = false)
-    private Integer patientId;
+    @Column(name = "paciente_id")
+    private Long patientId;
 
-    @Column(name = "profesional_id", nullable = false)
-    private Integer professionalId;
+    @Column(name = "profesional_id")
+    private Long professionalId;
 
-    @Column(name = "fecha_inicio", nullable = false)
+    @Column(name = "fecha_inicio")
     private LocalDate startDate;
 
-    @Column(name = "fecha_final", nullable = false)
+    @Column(name = "fecha_final")
     private LocalDate endDate;
 
-    @Column(name = "evaluacion", length = 300)
+    @Column(name = "evaluacion")
     private String evaluation;
 
-    @Column(name = "esta_activo", nullable = false)
+    @Column(name = "esta_activo")
     private Boolean isActive = true;
 }
-

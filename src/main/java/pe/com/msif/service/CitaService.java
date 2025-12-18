@@ -1,5 +1,6 @@
 package pe.com.msif.service;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -27,6 +28,12 @@ import java.util.Optional;
 public class CitaService {
 
     private static final Logger log = LoggerFactory.getLogger(CitaService.class);
+
+    @PostConstruct
+    public void debugDb() {
+        System.out.println("TOTAL CITAS = " + citaRepository.count());
+    }
+
 
     @Autowired
     private CitaRepository citaRepository;
@@ -86,95 +93,130 @@ public class CitaService {
     }
 
     @Transactional(readOnly = true)
-    public Cita findById(Integer id) {
+    public Cita findById(Long id) {
         Optional<Cita> optional = citaRepository.findById(id);
         if (optional.isEmpty()) throw new NotFoundException("Cita con id " + id + " no encontrada");
         return optional.get();
     }
 
     @Transactional
-    public Cita update(Integer id, UpdateCitaDto dto) {
+    public Cita update(Long id, UpdateCitaDto dto) {
         Cita cita = findById(id);
 
         if (dto.getRazon() != null) cita.setRazon(dto.getRazon());
+
         if (dto.getProfesionalId() != null) {
-            // Si se asigna profesional al actualizar, validar conflicto horario del profesional
             List<Cita> conflictos = citaRepository.findByProfesionalId(dto.getProfesionalId());
             for (Cita c : conflictos) {
-                if (!c.getId().equals(cita.getId()) && c.getFechaProgramada().isEqual(dto.getFechaProgramada() != null ? dto.getFechaProgramada() : cita.getFechaProgramada()) && Boolean.TRUE.equals(c.getEstaActivo())) {
+                if (!c.getId().equals(cita.getId())
+                        && c.getFechaProgramada().isEqual(
+                        dto.getFechaProgramada() != null
+                                ? dto.getFechaProgramada()
+                                : cita.getFechaProgramada()
+                )
+                        && Boolean.TRUE.equals(c.getEstaActivo())) {
                     throw new ConflictException("Existe otra cita para el profesional en la misma fecha y hora.");
                 }
             }
             cita.setProfesionalId(dto.getProfesionalId());
-            // Si el cliente no envió explícitamente estado y la cita estaba pendiente, marcar confirmada
+
             if (dto.getEstado() == null && cita.getEstado() == Cita.Estado.PENDIENTE) {
                 cita.setEstado(Cita.Estado.CONFIRMADA);
             }
         }
-        if (dto.getFechaProgramada() != null) cita.setFechaProgramada(dto.getFechaProgramada());
+
+        if (dto.getFechaProgramada() != null) {
+            cita.setFechaProgramada(dto.getFechaProgramada());
+        }
+
         if (dto.getEstado() != null) {
             try {
-                // Convertir texto libre a enum buscando el dbValue
-                Cita.Estado estado = null;
-                for (Cita.Estado e : Cita.Estado.values()) {
-                    if (e.getDbValue().equalsIgnoreCase(dto.getEstado())) {
-                        estado = e;
-                        break;
-                    }
-                }
-                if (estado == null) {
-                    // intentar por nombre del enum
-                    estado = Cita.Estado.valueOf(dto.getEstado().toUpperCase().replace(" ", "_").replace("Á","A").replace("Í","I").replace("Ó","O").replace("É","E").replace("Ú","U"));
-                }
+                String normalized = dto.getEstado()
+                        .toUpperCase()
+                        .replace(" ", "_")
+                        .replace("Á","A")
+                        .replace("É","E")
+                        .replace("Í","I")
+                        .replace("Ó","O")
+                        .replace("Ú","U");
+
+                Cita.Estado estado = Cita.Estado.valueOf(normalized);
                 cita.setEstado(estado);
+
             } catch (IllegalArgumentException ex) {
                 throw new BadRequestException("estado no reconocido: " + dto.getEstado());
             }
         }
-        if (dto.getEstaActivo() != null) cita.setEstaActivo(dto.getEstaActivo());
+
+        if (dto.getEstaActivo() != null) {
+            cita.setEstaActivo(dto.getEstaActivo());
+        }
 
         return citaRepository.save(cita);
     }
 
     @Transactional(readOnly = true)
-    public Page<Cita> findAll(Optional<Integer> pacienteId, Optional<Integer> profesionalId, Optional<String> estadoOpt, Optional<LocalDateTime> fromOpt, Optional<LocalDateTime> toOpt, Pageable pageable) {
-        // Implementación simple: filtrar en memoria usando repo básicos; para producción usar Specifications
+    public Page<Cita> findAll(
+            Optional<Long> pacienteId,
+            Optional<Long> profesionalId,
+            Optional<String> estadoOpt,
+            Optional<LocalDateTime> fromOpt,
+            Optional<LocalDateTime> toOpt,
+            Pageable pageable
+    ) {
         List<Cita> all = citaRepository.findAll();
 
         List<Cita> filtered = all.stream().filter(c -> {
             if (pacienteId.isPresent() && !pacienteId.get().equals(c.getPacienteId())) return false;
-            if (profesionalId.isPresent() && (c.getProfesionalId() == null || !profesionalId.get().equals(c.getProfesionalId()))) return false;
+            if (profesionalId.isPresent()
+                    && (c.getProfesionalId() == null || !profesionalId.get().equals(c.getProfesionalId())))
+                return false;
+
             if (estadoOpt.isPresent()) {
-                Cita.Estado e = c.getEstado();
-                if (e == null || !e.getDbValue().equalsIgnoreCase(estadoOpt.get())) return false;
+                if (c.getEstado() == null) return false;
+
+                String normalized = estadoOpt.get()
+                        .toUpperCase()
+                        .replace(" ", "_")
+                        .replace("Á","A")
+                        .replace("É","E")
+                        .replace("Í","I")
+                        .replace("Ó","O")
+                        .replace("Ú","U");
+
+                if (!c.getEstado().name().equals(normalized)) return false;
             }
+
             if (fromOpt.isPresent() && c.getFechaProgramada().isBefore(fromOpt.get())) return false;
             if (toOpt.isPresent() && c.getFechaProgramada().isAfter(toOpt.get())) return false;
+
             return true;
         }).toList();
 
         int start = Math.toIntExact(pageable.getOffset());
-        int end = Math.min((start + pageable.getPageSize()), filtered.size());
+        int end = Math.min(start + pageable.getPageSize(), filtered.size());
         List<Cita> content = filtered.subList(start, end);
+
         return new PageImpl<>(content, pageable, filtered.size());
     }
 
+
     @Transactional
-    public void delete(Integer id) {
+    public void delete(Long id) {
         Cita cita = findById(id);
         cita.setEstaActivo(false);
         citaRepository.save(cita);
     }
 
     @Transactional
-    public Cita activate(Integer id) {
+    public Cita activate(Long id) {
         Cita cita = findById(id);
         cita.setEstaActivo(true);
         return citaRepository.save(cita);
     }
 
     @Transactional
-    public Cita updateStatus(Integer id, pe.com.msif.dto.StatusUpdateDto dto) {
+    public Cita updateStatus(Long id, pe.com.msif.dto.StatusUpdateDto dto) {
         Cita cita = findById(id);
         if (dto.getEstado() == null) throw new BadRequestException("estado es requerido");
         String estadoStr = dto.getEstado();
@@ -189,7 +231,7 @@ public class CitaService {
             return saved;
         } else {
             // intento de aprobar/confirmar
-            Integer profesionalId = dto.getProfesionalId();
+            Long profesionalId = dto.getProfesionalId();
             if (profesionalId == null) throw new BadRequestException("profesionalId es requerido para aprobar la cita");
             // verificar conflictos exactos en la misma fecha/hora
             List<Cita> conflictos = citaRepository.findByProfesionalIdAndFechaProgramadaAndEstaActivoTrue(profesionalId, dto.getEstado() != null && dto.getEstado().equalsIgnoreCase("Confirmada") && dto.getProfesionalId() != null ? cita.getFechaProgramada() : cita.getFechaProgramada());
@@ -205,7 +247,7 @@ public class CitaService {
     }
 
     @Transactional(readOnly = true)
-    public pe.com.msif.dto.AvailabilityDto checkAvailability(Integer profesionalId, LocalDateTime fechaProgramada) {
+    public pe.com.msif.dto.AvailabilityDto checkAvailability(Long profesionalId, LocalDateTime fechaProgramada) {
         pe.com.msif.dto.AvailabilityDto av = new pe.com.msif.dto.AvailabilityDto();
         List<Cita> conflictos = citaRepository.findByProfesionalIdAndFechaProgramadaAndEstaActivoTrue(profesionalId, fechaProgramada);
         av.setAvailable(conflictos.isEmpty());

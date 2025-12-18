@@ -42,7 +42,7 @@ public class GuardianController {
     }
 
     @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GuardianDto> Update(@PathVariable Integer id, @RequestBody GuardianDto guardianDto)
+    public ResponseEntity<GuardianDto> Update(@PathVariable Long id, @RequestBody GuardianDto guardianDto)
     {
         Guardian guardian = autoMapper.mapTo(guardianDto, Guardian.class);
         GuardianDto response = autoMapper.mapTo(guardianService.Update(id, guardian), GuardianDto.class);
@@ -51,7 +51,7 @@ public class GuardianController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> Delete(@PathVariable Integer id)
+    public ResponseEntity<Void> Delete(@PathVariable Long id)
     {
         guardianService.DeleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
