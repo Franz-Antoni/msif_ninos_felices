@@ -4,20 +4,20 @@ spring:
 
   security:
     jwt:
-      secret-key: qrVEBGGghpkc9Ra5L1ELHxm6gisrpgMw
-      expiration: 1800000
+      secret-key: ${JWT_SECRET}
+      expiration: ${JWT_EXPIRATION:1800000}
       refresh-token:
-        expiration: 604800000
+        expiration: ${JWT_REFRESH_EXPIRATION:604800000}
 
   redis:
-    host: localhost
-    port: 6379
+    host: ${SPRING_REDIS_HOST:localhost}
+    port: ${SPRING_REDIS_PORT:6379}
     timeout: 2000ms
 
   datasource:
-    url: jdbc:postgresql://aws-0-us-west-2.pooler.supabase.com:5432/postgres
-    username: postgres.puemwmgbryqpcmaopens
-    password: root123
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
     hikari:
