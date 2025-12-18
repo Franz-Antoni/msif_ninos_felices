@@ -19,7 +19,7 @@ public class Professional {
     @Column(name = "nombre", length = 50, nullable = false)
     private String firstName;
 
-    @Column(name = "apelido", length = 50, nullable = false)
+    @Column(name = "apellido", length = 50, nullable = false)
     private String lastName;
 
     @Column(name = "especialidad_id", nullable = false)
