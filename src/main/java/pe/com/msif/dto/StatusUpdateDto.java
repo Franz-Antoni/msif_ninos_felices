@@ -10,4 +10,11 @@ public class StatusUpdateDto {
     private String estado; // e.g. "Confirmada", "Rechazada"
     private Long profesionalId; // optional when approving
     private String motivoRechazo; // optional when rejecting
+
+    // Campos para atención clínica
+    private String motivoAtencion;
+    private String evaluacionClinica;
+    private String diagnostico;
+    private String observaciones;
+    private String planIntervencion;
 }
