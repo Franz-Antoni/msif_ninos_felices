@@ -8,14 +8,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface CitaRepository extends JpaRepository<Cita, Integer> {
-    List<Cita> findByPacienteId(Integer pacienteId);
-    List<Cita> findByProfesionalId(Integer profesionalId);
+public interface CitaRepository extends JpaRepository<Cita, Long> {
+    List<Cita> findByPacienteId(Long pacienteId);
+    List<Cita> findByProfesionalId(Long profesionalId);
     List<Cita> findByEstado(Cita.Estado estado);
     List<Cita> findByFechaProgramadaBetween(LocalDateTime from, LocalDateTime to);
 
-    List<Cita> findByProfesionalIdAndFechaProgramadaAndEstaActivoTrue(Integer profesionalId, LocalDateTime fechaProgramada);
+    List<Cita> findByProfesionalIdAndFechaProgramadaAndEstaActivoTrue(Long profesionalId, LocalDateTime fechaProgramada);
 
     // buscar citas activas del profesional en un rango (por si se quiere comprobar solapamiento)
-    List<Cita> findByProfesionalIdAndFechaProgramadaBetweenAndEstaActivoTrue(Integer profesionalId, LocalDateTime from, LocalDateTime to);
+    List<Cita> findByProfesionalIdAndFechaProgramadaBetweenAndEstaActivoTrue(Long profesionalId, LocalDateTime from, LocalDateTime to);
 }

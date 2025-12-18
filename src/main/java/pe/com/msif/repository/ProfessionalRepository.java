@@ -7,7 +7,6 @@ import pe.com.msif.model.Professional;
 import java.util.List;
 
 @Repository
-public interface ProfessionalRepository extends JpaRepository<Professional, Integer> {
+public interface ProfessionalRepository extends JpaRepository<Professional, Long> {
     List<Professional> findAllByIsActive(Boolean isActive);
 }
-

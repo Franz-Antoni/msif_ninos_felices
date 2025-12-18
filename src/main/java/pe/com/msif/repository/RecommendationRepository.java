@@ -7,7 +7,6 @@ import pe.com.msif.model.Recommendation;
 import java.util.List;
 
 @Repository
-public interface RecommendationRepository extends JpaRepository<Recommendation, Integer> {
+public interface RecommendationRepository extends JpaRepository<Recommendation, Long> {
     List<Recommendation> findAllByIsActive(Boolean isActive);
 }
-

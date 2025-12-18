@@ -18,7 +18,7 @@ public class ProfessionalService {
         return professionalRepository.save(entity);
     }
 
-    public Professional Update(Integer id, Professional entity) {
+    public Professional Update(Long id, Professional entity) {
         Optional<Professional> entityExists = professionalRepository.findById(id);
 
         if(entityExists.isPresent()) {
@@ -38,7 +38,7 @@ public class ProfessionalService {
         return professionalRepository.findAllByIsActive(status);
     }
 
-    public Optional<Professional> FindById(Integer id) {
+    public Optional<Professional> FindById(Long id) {
         Optional<Professional> entity = professionalRepository.findById(id);
 
         if(entity.isEmpty()) {
@@ -48,7 +48,7 @@ public class ProfessionalService {
         return entity;
     }
 
-    public void DeleteById(Integer id) {
+    public void DeleteById(Long id) {
         Optional<Professional> entityExists = professionalRepository.findById(id);
 
         if(entityExists.isPresent()) {
@@ -60,4 +60,3 @@ public class ProfessionalService {
         }
     }
 }
-

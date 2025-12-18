@@ -15,7 +15,7 @@ public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
     @Column(name = "nombre")
     private String name;
     @Column(name = "apellido")
@@ -26,10 +26,10 @@ public class Patient {
     private String dni;
     @Column(name = "fecha_nacimiento")
     private LocalDate birthDate;
-    @Column(name = "nivel_autismo", columnDefinition = "ENUM('Leve','Moderado','Grave')")
+    @Column(name = "nivel_autismo")
     private String autismLevel;
     @Column(name = "apoderado_id")
-    private Integer guardianId;
+    private Long guardianId;
     @Column(name = "fecha_registro")
     private LocalDateTime registrationDate = LocalDateTime.now();
     @Column(name = "esta_activo")

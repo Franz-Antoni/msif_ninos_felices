@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface GuardianRepository extends JpaRepository<Guardian, Integer> {
+public interface GuardianRepository extends JpaRepository<Guardian, Long> {
     @Query("SELECT g FROM Guardian g WHERE g.isActive =:status")
     List<Guardian> findAllByStatus(Boolean status);
     Optional<Guardian> findByDni(String dni);

@@ -14,7 +14,7 @@ public class Professional {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "nombre", length = 50, nullable = false)
     private String firstName;
@@ -23,7 +23,7 @@ public class Professional {
     private String lastName;
 
     @Column(name = "especialidad_id", nullable = false)
-    private Integer specialtyId;
+    private Long specialtyId;
 
     @Column(name = "telefono", length = 9, nullable = false)
     private String phone;
@@ -34,4 +34,3 @@ public class Professional {
     @Column(name = "esta_activo", nullable = false)
     private Boolean isActive = true;
 }
-

@@ -26,7 +26,7 @@ public class GuardianService {
         return guardianRepository.save(entity);
     }
 
-    public Guardian Update(Integer id, Guardian entity) {
+    public Guardian Update(Long id, Guardian entity) {
         Optional<Guardian> entityExists = guardianRepository.findById(id);
 
         if(entityExists.isPresent()) {
@@ -49,7 +49,7 @@ public class GuardianService {
         return guardianRepository.findAllByStatus(status);
     }
 
-    public Optional<Guardian> FindById(Integer id) {
+    public Optional<Guardian> FindById(Long id) {
         Optional<Guardian> guardian = guardianRepository.findById(id);
 
         if(guardian.isEmpty()) {
@@ -67,7 +67,7 @@ public class GuardianService {
         return guardianRepository.findByDni(dni);
     }
 
-    public void DeleteById(Integer id) {
+    public void DeleteById(Long id) {
         Optional<Guardian> entityExists = guardianRepository.findById(id);
 
         if(entityExists.isPresent()) {

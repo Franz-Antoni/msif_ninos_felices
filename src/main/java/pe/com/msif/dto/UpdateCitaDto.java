@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class UpdateCitaDto {
     private String razon;
 
-    private Integer profesionalId;
+    private Long profesionalId;
 
     private LocalDateTime fechaProgramada;
 

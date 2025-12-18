@@ -12,7 +12,7 @@ public class Recommendation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "nombre", length = 100, nullable = false)
     private String name;
@@ -21,9 +21,8 @@ public class Recommendation {
     private String description;
 
     @Column(name = "historial_clinico_id", nullable = false)
-    private Integer medicalHistoryId;
+    private Long medicalHistoryId;
 
     @Column(name = "esta_activo", nullable = false)
     private Boolean isActive = true;
 }
-

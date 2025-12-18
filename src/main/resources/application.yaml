@@ -14,22 +14,17 @@ spring:
     port: 6379
     timeout: 2000ms
 
+  datasource:
+    url: jdbc:postgresql://db.puemwmgbryqpcmaopens.supabase.co:5432/postgres
+    username: postgres
+    password: root123
+    driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
-      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+      ddl-auto: none
     show-sql: true
-    properties:
-      hibernate:
-        query:
-          in_clause_parameter_adding: true
-
-# Datasource: usar variable de entorno SPRING_DATASOURCE_URL/USERNAME/PASSWORD cuando esté disponible.
-# Si no se provee, caerá a un H2 en memoria para desarrollo/local.
-
-spring.datasource.url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:localdb;DB_CLOSE_DELAY=-1}
-spring.datasource.username: ${SPRING_DATASOURCE_USERNAME:sa}
-spring.datasource.password: ${SPRING_DATASOURCE_PASSWORD:}
-spring.datasource.driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 # Hikari defaults
 spring.datasource.hikari.maximum-pool-size: 3

@@ -18,7 +18,7 @@ public class ObjectiveService {
         return repository.save(entity);
     }
 
-    public Objective Update(Integer id, Objective entity) {
+    public Objective Update(Long id, Objective entity) {
         Optional<Objective> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         entity.setId(id);
@@ -31,13 +31,17 @@ public class ObjectiveService {
         return repository.findAllByIsActive(status);
     }
 
-    public Optional<Objective> FindById(Integer id) {
+    public List<Objective> FindAllByTreatmentPlan(Long treatmentPlanId) {
+        return repository.findAllByTreatmentPlanIdAndIsActive(treatmentPlanId, true);
+    }
+
+    public Optional<Objective> FindById(Long id) {
         Optional<Objective> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         return e;
     }
 
-    public void DeleteById(Integer id) {
+    public void DeleteById(Long id) {
         Optional<Objective> e = repository.findById(id);
         if (e.isEmpty()) throw new NotFoundException();
         Objective entity = e.get();
@@ -45,4 +49,3 @@ public class ObjectiveService {
         repository.save(entity);
     }
 }
-

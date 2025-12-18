@@ -26,11 +26,11 @@ public class AppointmentService {
         return appointmentRepository.save(a);
     }
 
-    public Optional<Appointment> findById(Integer id) {
+    public Optional<Appointment> findById(Long id) {
         return appointmentRepository.findById(id);
     }
 
-    public List<AppointmentCalendarDto> getCalendarData(Optional<Integer> patientIdOpt, Integer month, Integer year) {
+    public List<AppointmentCalendarDto> getCalendarData(Optional<Long> patientIdOpt, Integer month, Integer year) {
         // month: 1-12
         YearMonth ym = YearMonth.of(year, month);
         LocalDateTime from = ym.atDay(1).atStartOfDay();
@@ -50,10 +50,11 @@ public class AppointmentService {
             dto.setMonth(a.getScheduledDate().getMonthValue());
             dto.setDay(a.getScheduledDate().getDayOfMonth());
             dto.setReason(a.getReason());
+            dto.setPatientId(a.getPatientId());
             // fetch patient name
             Optional<Patient> p = patientRepository.findById(a.getPatientId());
             dto.setPatientName(p.map(pt -> pt.getName() + " " + pt.getLastName()).orElse("<Unknown>"));
-            dto.setStatus(a.getStatus() == null ? null : a.getStatus().getDbValue());
+            dto.setStatus(a.getStatus());
             dto.setIsActive(a.getIsActive());
             dto.setScheduledDate(a.getScheduledDate());
 
@@ -63,4 +64,3 @@ public class AppointmentService {
         return res;
     }
 }
-

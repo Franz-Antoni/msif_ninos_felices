@@ -35,16 +35,15 @@ public class SpecialtyController {
     }
 
     @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SpecialtyDto> Update(@PathVariable Integer id, @RequestBody SpecialtyDto dto) {
+    public ResponseEntity<SpecialtyDto> Update(@PathVariable Long id, @RequestBody SpecialtyDto dto) {
         Specialty e = autoMapper.mapTo(dto, Specialty.class);
         SpecialtyDto response = autoMapper.mapTo(specialtyService.Update(id, e), SpecialtyDto.class);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> Delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> Delete(@PathVariable Long id) {
         specialtyService.DeleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
-

@@ -4,11 +4,10 @@ import lombok.Data;
 
 @Data
 public class ObjectiveDto {
-    private Integer id;
+    private Long id;
     private String title;
     private String description;
-    private Integer treatmentPlanId;
+    private Long treatmentPlanId;
     private String status;
     private Boolean isActive;
 }
-

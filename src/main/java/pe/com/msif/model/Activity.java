@@ -12,24 +12,23 @@ public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
-    @Column(name = "titulo", length = 100, nullable = false)
+    @Column(name = "titulo")
     private String title;
 
-    @Column(name = "descripcion", length = 300, nullable = false)
+    @Column(name = "descripcion")
     private String description;
 
-    @Column(name = "sesion_terapia_id", nullable = false)
-    private Integer therapySessionId;
+    @Column(name = "sesion_terapia_id")
+    private Long therapySessionId;
 
-    @Column(name = "estado", columnDefinition = "enum('Pendiente','En progreso','Completada','No lograda', 'Cancelada')")
+    @Column(name = "estado")
     private String status;
 
-    @Column(name = "nota_progreso", length = 300)
+    @Column(name = "nota_progreso")
     private String progressNote;
 
-    @Column(name = "esta_activo", nullable = false)
+    @Column(name = "esta_activo")
     private Boolean isActive = true;
 }
-

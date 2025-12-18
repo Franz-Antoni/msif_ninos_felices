@@ -5,59 +5,40 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
-@Table(name = "cita")
+@Table(name = "cita", schema = "public")
 @Getter
 @Setter
 public class Cita {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "razon", length = 100, nullable = false)
     private String razon;
 
     @Column(name = "paciente_id", nullable = false)
-    private Integer pacienteId;
+    private Long pacienteId;
 
     @Column(name = "profesional_id")
-    private Integer profesionalId;
+    private Long profesionalId;
 
     @Column(name = "fecha_programada", nullable = false)
     private LocalDateTime fechaProgramada;
 
-    // Enum Java con mapeo a los valores almacenados en la DB
     public enum Estado {
-        PENDIENTE("Pendiente"),
-        CONFIRMADA("Confirmada"),
-        COMPLETADA("Completada"),
-        CANCELADA("Cancelada"),
-        NO_ASISTIO("No asistió");
-
-        private final String dbValue;
-
-        Estado(String dbValue) {
-            this.dbValue = dbValue;
-        }
-
-        public String getDbValue() {
-            return dbValue;
-        }
-
-        public static Estado fromDbValue(String dbValue) {
-            for (Estado e : values()) {
-                if (e.dbValue.equals(dbValue)) return e;
-            }
-            return null;
-        }
+        PENDIENTE,
+        CONFIRMADA,
+        COMPLETADA,
+        CANCELADA,
+        NO_ASISTIO
     }
-
-    // Mapeo que respeta la definición ENUM existente en la base de datos para evitar errores de validación
-    @Column(name = "estado", columnDefinition = "enum('Pendiente','Confirmada','Completada','Cancelada','No asistió')")
-    @Convert(converter = EstadoCitaConverter.class)
-    private Estado estado = Estado.PENDIENTE;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado")
+    private Estado estado;
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion = LocalDateTime.now();
@@ -68,19 +49,17 @@ public class Cita {
     @Column(name = "motivo_rechazo")
     private String motivoRechazo;
 
-    // Convertidor como clase estática interna para mapear enum <-> valor DB
-    @Converter(autoApply = false)
-    public static class EstadoCitaConverter implements AttributeConverter<Estado, String> {
-        @Override
-        public String convertToDatabaseColumn(Estado attribute) {
-            if (attribute == null) return null;
-            return attribute.getDbValue();
-        }
 
-        @Override
-        public Estado convertToEntityAttribute(String dbData) {
-            if (dbData == null) return null;
-            return Estado.fromDbValue(dbData);
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cita)) return false;
+        Cita cita = (Cita) o;
+        return Objects.equals(getId(), cita.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

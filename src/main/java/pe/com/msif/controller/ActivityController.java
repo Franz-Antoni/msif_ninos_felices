@@ -28,23 +28,29 @@ public class ActivityController {
     }
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ActivityDto>> Read(@RequestParam(required = false) Boolean status) {
-        List<ActivityDto> res = autoMapper.mapList(service.FindAllByStatus(status), ActivityDto.class);
+    public ResponseEntity<List<ActivityDto>> Read(@RequestParam(required = false) Boolean status,
+                                                  @RequestParam(required = false) Long therapySessionId) {
+        List<Activity> resList;
+        if (therapySessionId != null) {
+            resList = service.FindAllByTherapySession(therapySessionId);
+        } else {
+            resList = service.FindAllByStatus(status);
+        }
+        List<ActivityDto> res = autoMapper.mapList(resList, ActivityDto.class);
         if (res.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ActivityDto> Update(@PathVariable Integer id, @RequestBody ActivityDto dto) {
+    public ResponseEntity<ActivityDto> Update(@PathVariable Long id, @RequestBody ActivityDto dto) {
         Activity e = autoMapper.mapTo(dto, Activity.class);
         ActivityDto res = autoMapper.mapTo(service.Update(id, e), ActivityDto.class);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> Delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> Delete(@PathVariable Long id) {
         service.DeleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
-
