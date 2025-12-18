@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.msif.config.AutoMapper;
 import pe.com.msif.dto.CitaDto;
 import pe.com.msif.dto.CreateCitaDto;
+import pe.com.msif.dto.StatusUpdateDto;
 import pe.com.msif.dto.UpdateCitaDto;
 import pe.com.msif.model.Cita;
 import pe.com.msif.model.Patient;
@@ -159,5 +159,24 @@ public class CitaController {
     ) {
         pe.com.msif.dto.AvailabilityDto av = citaService.checkAvailability(profesionalId, fechaProgramada);
         return ResponseEntity.ok(av);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<CitaDto> updateStatus(@PathVariable Long id, @RequestBody StatusUpdateDto dto) {
+        Cita c = citaService.updateStatus(id, dto);
+        CitaDto response = autoMapper.mapTo(c, CitaDto.class);
+        if (c.getEstado() != null) response.setEstado(c.getEstado().name());
+        if (c.getPacienteId() != null) {
+            Optional<Patient> p = patientRepository.findById(c.getPacienteId());
+            p.ifPresent(patient -> {
+                response.setPacienteDni(patient.getDni());
+                response.setPacienteNombre(patient.getName() + " " + patient.getLastName());
+            });
+        }
+        if (c.getProfesionalId() != null) {
+            Optional<Professional> pr = professionalRepository.findById(c.getProfesionalId());
+            pr.ifPresent(prof -> response.setProfesionalNombre(prof.getFirstName() + " " + prof.getLastName()));
+        }
+        return ResponseEntity.ok(response);
     }
 }
